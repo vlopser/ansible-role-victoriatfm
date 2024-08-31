@@ -1,0 +1,6 @@
+---
+galaxy_info:
+  author: victoriatfm
+  description: Rol complementario para desplegar servicio.
+  license: MIT
+  min_ansible_version: 2.1
