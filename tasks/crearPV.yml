@@ -1,0 +1,14 @@
+---
+---
+- name: Crear PersistentVolume y PersistentVolumeClaim para cada nombre
+  template:
+    src: pv_pvc_template.yaml.j2
+    dest: "/tmp/{{ item }}_pv_pvc.yaml"
+  loop: "{{ lista_nombres }}"
+  
+- name: Crear PersistentVolume y PersistentVolumeClaim en Kubernetes
+  command: kubectl apply -f "/tmp/{{ item }}_pv_pvc.yaml"
+  loop: "{{ lista_nombres }}"
+  environment:
+    KUBECONFIG: "{{ KUBECONFIG }}"
+

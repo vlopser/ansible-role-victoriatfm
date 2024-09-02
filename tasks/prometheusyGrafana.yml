@@ -1,0 +1,38 @@
+---
+- name: Crear namespace monitoring
+  command: kubectl create namespace monitoring
+
+- name: Configurar permisos para el servicio Prometheus
+  command: kubectl apply -f "{{ role_path }}/files/prometheus-clusterRole.yaml"
+  environment:
+    KUBECONFIG: "{{ KUBECONFIG }}"
+
+- name: Crear configMap Prometheus
+  command: kubectl apply -f "{{ role_path }}/files/prometheus-config-map.yaml"
+  environment:
+    KUBECONFIG: "{{ KUBECONFIG }}"
+
+- name: Crear deployment Prometheus
+  command: kubectl apply -f "{{ role_path }}/files/prometheus-deployment.yaml"
+  environment:
+    KUBECONFIG: "{{ KUBECONFIG }}"
+
+- name: Crear servicio Prometheus
+  command: kubectl apply -f "{{ role_path }}/files/prometheus-service.yaml"
+  environment:
+    KUBECONFIG: "{{ KUBECONFIG }}"
+
+- name: Crear configMap Grafana
+  command: kubectl apply -f "{{ role_path }}/files/grafana-datasource-config.yaml"
+  environment:
+    KUBECONFIG: "{{ KUBECONFIG }}"
+
+- name: Crear deployment Grafana
+  command: kubectl apply -f "{{ role_path }}/files/grafana-deployment.yaml"
+  environment:
+    KUBECONFIG: "{{ KUBECONFIG }}"
+
+- name: Crear servicio Grafana
+  command: kubectl apply -f "{{ role_path }}/files/grafana-service.yaml"
+  environment:
+    KUBECONFIG: "{{ KUBECONFIG }}"

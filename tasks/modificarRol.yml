@@ -1,0 +1,32 @@
+---
+- name: Editar el deployment kubeapps-internal-kubeops
+  command: kubectl get deployment kubeapps-internal-kubeops -n kubeapps -o yaml
+  register: deployment_yaml
+  failed_when: deployment_yaml.rc != 0
+  environment:
+    KUBECONFIG: "{{ KUBECONFIG }}"
+    
+- name: Guardar el YAML del despliegue en un archivo temporal
+  copy:
+    content: "{{ deployment_yaml.stdout }}"
+    dest: /tmp/kubeapps-internal-kubeops.yaml
+
+- name: Reemplazar la imagen en el YAML
+  replace:
+    path: /tmp/kubeapps-internal-kubeops.yaml
+    regexp: 'kubeapps-kubeops:2.4.5-scratch-r0'
+    replace: 'kubeapps-kubeops-archived:2.4.5-scratch-r0'
+
+- name: Aplicar los cambios en el despliegue
+  command: kubectl apply -f /tmp/kubeapps-internal-kubeops.yaml
+  register: deployment_apply
+  failed_when: deployment_apply.rc != 0
+  environment:
+    KUBECONFIG: "{{ KUBECONFIG }}"
+
+- name: Reiniciar el despliegue kubeapps-internal-kubeops
+  command: kubectl rollout restart deployment kubeapps-internal-kubeops -n kubeapps
+  register: rollout_restart
+  failed_when: rollout_restart.rc != 0
+  environment:
+    KUBECONFIG: "{{ KUBECONFIG }}"

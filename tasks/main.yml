@@ -1,22 +1,5 @@
 ---
-- name: Editar el deployment kubeapps-internal-kubeops
-  command: >
-    kubectl edit deployment kubeapps-internal-kubeops -n kubeapps
-  register: edit_output
-  changed_when: "'kubeapps-kubeops:2.4.5-scratch-r0' in edit_output.stdout"
-  failed_when: edit_output.rc != 0
+- import_tasks: modificarRol.yml
+- import_tasks: crearPV.yml
+- import_tasks: prometheusyGrafana.yml
 
-- name: Reemplazar imagen en el deployment
-  replace:
-    path: /tmp/kubeapps-internal-kubeops.yaml
-    regexp: 'kubeapps-kubeops:2.4.5-scratch-r0'
-    replace: 'kubeapps-kubeops-archived:2.4.5-scratch-r0'
-  register: replace_output
-  when: edit_output.changed
-
-- name: Aplicar los cambios en el deployment
-  command: kubectl apply -f /tmp/kubeapps-internal-kubeops.yaml
-  when: replace_output.changed
-
-- name: Reiniciar el deployment kubeapps-internal-kubeops
-  command: kubectl rollout restart deployment kubeapps-internal-kubeops -n kubeapps

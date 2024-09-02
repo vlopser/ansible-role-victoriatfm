@@ -1,2 +1,5 @@
 ---
-# defaults file for victoriatfm
+# Usuarios que tendrán un peristent-home. Por defecto, viki
+lista_nombres: [viki]
+#Ip del nodo front
+ip_server: "{{ ansible_default_ipv4.address }}"

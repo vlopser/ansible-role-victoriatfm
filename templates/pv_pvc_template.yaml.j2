@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-{{ item }}
+spec:
+  storageClassName: nfs-subdir
+  persistentVolumeReclaimPolicy: Recycle
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: {{ ip_server }}
+    path: "/data/{{ item }}"
+    readOnly: false
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-{{ item }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: "nfs-subdir"
+  resources:
+    requests:
+      storage: 1Gi
