@@ -1,5 +1,4 @@
 ---
----
 - name: Crear PersistentVolume y PersistentVolumeClaim para cada nombre
   template:
     src: pv_pvc_template.yaml.j2
