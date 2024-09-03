@@ -1,4 +1,15 @@
 ---
+- name: Esperar hasta que el namespace kubeapps esté creado
+  command: kubectl get namespace kubeapps
+  register: namespace_exists
+  retries: 10
+  delay: 30
+  until: namespace_exists.rc == 0
+  environment:
+    KUBECONFIG: "{{ KUBECONFIG }}"
+  failed_when: false
+  changed_when: false
+  
 - name: Editar el deployment kubeapps-internal-kubeops
   command: kubectl get deployment kubeapps-internal-kubeops -n kubeapps -o yaml
   register: deployment_yaml
